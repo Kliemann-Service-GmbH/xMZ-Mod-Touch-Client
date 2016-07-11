@@ -15,7 +15,7 @@ cargo build --release
 ```bash
 cd
 cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-Client
-cp target/release/xmz-client /usr/bin/
+cp target/release/xMZ-Mod-Touch-Client /usr/bin/xmz-client
 ```
 
 # Tests
