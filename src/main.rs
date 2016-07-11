@@ -20,7 +20,7 @@ impl Client {
 
     pub fn run(&self) {
         let mut socket = Socket::new(Protocol::Req).unwrap();
-        let mut endpoint = socket.connect("ipc:///tmp/client.ipc").unwrap();
+        let mut endpoint = socket.connect("ipc:///tmp/xmz-client.ipc").unwrap();
         let client_name = self.name.clone();
 
         let client_thread = thread::spawn(move || {
@@ -51,7 +51,7 @@ impl Client {
                 thread::sleep(Duration::new(1, 0));
             }
         });
-        // client_thread.join();
+        client_thread.join();
     }
 
 }
@@ -112,13 +112,9 @@ fn device() {
 
 
 fn main() {
-    for i in 1..101 {
-        let name = format!("Client {}", i);
-        let client = Client::new(name);
-        client.run();
-    }
+    let client = Client::new("A client".to_string());
+    client.run();
+    // device();
+    // server();
 
-    device();
-
-    server();
 }
