@@ -1,7 +1,8 @@
 [package]
-name = "xMZ-Mod-Touch-Client"
+name = "xmz-client"
 version = "0.1.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 
 [dependencies]
 nanomsg = "*"
+clap = { version = "*", features = ["unstable"] }

@@ -15,7 +15,7 @@ cargo build --release
 ```bash
 cd
 cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-Client
-cp target/release/xMZ-Mod-Touch-Client /usr/bin/xmz-client
+cp target/release/xmz-client /usr/bin/
 ```
 
 # Tests
@@ -25,12 +25,12 @@ Optional können auch die Tests aufgerufen werden.
 ```bash
 cd
 cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-Client
-cargo build --release
+cargo test
 ```
 
 # Links
 
 * https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Software
-
+* Command Line Parser https://github.com/kbknapp/clap-rs
 
 [1]: https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Software
