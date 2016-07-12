@@ -2,7 +2,14 @@
 name = "xmz-client"
 version = "0.1.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
+description = "Befehlszeilen Client für die 'xMZ-Mod-Touch'-Platform"
+homepage = "https://gaswarnanlagen.com/xmz"
+repository = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client"
+readme = "README.md"
+keywords = ["xmz", "xMZ-Mod-Touch"]
+license = "GPL-2.0"
+
 
 [dependencies]
-nanomsg = "*"
-clap = { version = "*", features = ["unstable"] }
+nanomsg = "0.6"
+clap = { version = "2", features = ["unstable"] }

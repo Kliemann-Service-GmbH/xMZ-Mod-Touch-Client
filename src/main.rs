@@ -1,7 +1,9 @@
-/// Bei dieser Lösung ist die Socket Endpoint Initalisierung schon mal sehr cool.
+#![doc(html_logo_url = "https://raw.githubusercontent.com/zzeroo/xmz-snapshot/master/share/xmz-logo.png",
+       html_favicon_url = "https://raw.githubusercontent.com/zzeroo/xmz-snapshot/master/share/favicon.ico",
+       html_root_url = "https://gaswarnanlagen.com/")]
 
-extern crate nanomsg;
 #[macro_use] extern crate clap;
+extern crate nanomsg;
 
 use client::Client;
 
@@ -10,7 +12,7 @@ mod cmd;
 
 
 fn main() {
-    println!("{:?}", cmd::read_command());
-    // let mut client = Client::new("A client".to_string());
-    // client.run();
+    let message = cmd::read_command();
+    let mut client = Client::new("A client".to_string());
+    client.request(message);
 }

@@ -41,4 +41,29 @@ impl Client {
             }
         }
     }
+
+
+    pub fn request<T: AsRef<str>>(&mut self, message: T) {
+        let mut reply = String::new();
+
+        let request = format!("{}", message.as_ref());
+
+        match self.socket.write_all(request.as_bytes()) {
+            Ok(..) => {
+                println!("Sende: {}", request);
+            }
+            Err(err) => { println!("Fehler beim Senden des Requests: {}", request); }
+        }
+
+        match self.socket.read_to_string(&mut reply) {
+            Ok(_) => {
+                println!("{} hat '{}' empfangen", self.name, reply);
+                reply.clear();
+            }
+            Err(err) => {
+                println!("{} konnte Reply nicht empfangen: {}", self.name, err);
+            }
+        }
+    }
+
 }
