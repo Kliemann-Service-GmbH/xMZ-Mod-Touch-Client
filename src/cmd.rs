@@ -26,11 +26,35 @@ pub fn read_command() -> String {
                 (about: "schaltet die gegebenen LED")
                 (@arg num: +takes_value +required "LED Nummer(n)")
             )
+            (@subcommand get =>
+                (about: "Zustand der gegebenen LED abfragen")
+                (@arg num: +takes_value +required "LED Nummer(n)")
+            )
+            (@subcommand clear =>
+                (about: "löscht die gegebenen LED")
+                (@arg num: +takes_value +required "LED Nummer(n)")
+            )
+            (@subcommand toggle =>
+                (about: "wechselt der Zustand die gegebenen LED")
+                (@arg num: +takes_value +required "LED Nummer(n)")
+            )
         )
         (@subcommand relais =>
             (about: "Steuert die RELAIS der 'xMZ-Mod-Touch'")
             (@subcommand set =>
-                (about: "schaltet die gegebenen Relais")
+                (about: "schaltet das gegebenen Relais")
+                (@arg num: +takes_value +required "Relais Nummer(n)")
+            )
+            (@subcommand get =>
+                (about: "Zustand des gegebenen Relais abfragen")
+                (@arg num: +takes_value +required "Relais Nummer(n)")
+            )
+            (@subcommand clear =>
+                (about: "löscht das gegebenen Relais")
+                (@arg num: +takes_value +required "Relais Nummer(n)")
+            )
+            (@subcommand toggle =>
+                (about: "wechselt der Zustand des gegebenen Relais")
                 (@arg num: +takes_value +required "Relais Nummer(n)")
             )
         )
@@ -47,12 +71,48 @@ pub fn read_command() -> String {
                 options = matches.to_string();
             }
         }
+        if let Some(ref matches) = matches.subcommand_matches("get") {
+            subcommand = "get";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
+        if let Some(ref matches) = matches.subcommand_matches("clear") {
+            subcommand = "clear";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
+        if let Some(ref matches) = matches.subcommand_matches("toggle") {
+            subcommand = "toggle";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
     }
 
     if let Some(ref matches) = matches.subcommand_matches("relais") {
         command = "relais";
         if let Some(ref matches) = matches.subcommand_matches("set") {
             subcommand = "set";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
+        if let Some(ref matches) = matches.subcommand_matches("get") {
+            subcommand = "get";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
+        if let Some(ref matches) = matches.subcommand_matches("clear") {
+            subcommand = "clear";
+            if let Some(ref matches) = matches.value_of("num") {
+                options = matches.to_string();
+            }
+        }
+        if let Some(ref matches) = matches.subcommand_matches("toggle") {
+            subcommand = "toggle";
             if let Some(ref matches) = matches.value_of("num") {
                 options = matches.to_string();
             }
