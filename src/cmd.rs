@@ -61,7 +61,7 @@ pub fn read_command() -> String {
             (@subcommand set =>
                 (about: "Konfiguration des Servers (1. Parameter) durch den Wert (2. Parameter) ersetzen")
                 (@arg config_entry: +takes_value +required "Konfigurations Parameter")
-                (@arg value: +takes_value +required "zu setzender Wert")
+                (@arg config_value: +takes_value +required "zu setzender Wert")
             )
             (@subcommand get =>
                 (about: "Konfigurations Parameter abfragen")
@@ -144,26 +144,26 @@ pub fn read_command() -> String {
         let command = "server";
         let mut subcommand = "";
         let mut config_entry = "";
-        let mut value = "";
+        let mut config_value = "";
 
         if let Some(ref matches) = matches.subcommand_matches("set") {
             subcommand = "set";
             if let Some(ref matches) = matches.value_of("config_entry") {
                 config_entry = matches;
             }
-            if let Some(ref matches) = matches.value_of("value") {
-                value = matches;
+            if let Some(ref matches) = matches.value_of("config_value") {
+                config_value = matches;
             }
+            fullcommand = format!("{} {} {} {}", command, subcommand, config_entry, config_value);
         }
-        fullcommand = format!("{} {} {} {}", command, subcommand, config_entry, value);
 
         if let Some(ref matches) = matches.subcommand_matches("get") {
             subcommand = "get";
             if let Some(ref matches) = matches.value_of("config_entry") {
                 config_entry = matches;
             }
+            fullcommand = format!("{} {} {}", command, subcommand, config_entry);
         }
-        fullcommand = format!("{} {} {}", command, subcommand, config_entry);
     }
 
     // Return value senden
