@@ -189,7 +189,7 @@ pub fn read_command() -> String {
                 config_value = matches;
             }
             if let Some(ref matches) = matches.value_of("module_num") {
-                config_value = matches;
+                module_num = matches;
             }
             fullcommand = format!("{} {} {} {} {}", command, subcommand, config_entry, config_value, module_num);
         }
