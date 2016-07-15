@@ -4,17 +4,17 @@ use std::thread;
 use std::time::Duration;
 
 pub struct Client {
-    name: String,
     socket: Socket,
 }
 
 impl Client {
-    pub fn new(name: String) -> Self {
+    pub fn new() -> Self {
         let mut socket = Socket::new(Protocol::Req).unwrap();
+        socket.set_send_timeout(10);
+        socket.set_receive_timeout(100);
         let mut endpoint = socket.connect("ipc:///tmp/xmz-client.ipc").unwrap();
 
         Client {
-            name: name,
             socket: socket,
         }
     }
@@ -22,7 +22,7 @@ impl Client {
     pub fn run(&mut self) {
         let mut reply = String::new();
 
-        let request = format!("{}: led set 1", self.name);
+        let request = format!("led set 1");
 
         match self.socket.write_all(request.as_bytes()) {
             Ok(..) => {
@@ -33,11 +33,11 @@ impl Client {
 
         match self.socket.read_to_string(&mut reply) {
             Ok(_) => {
-                println!("{} hat '{}' empfangen", self.name, reply);
+                println!("'{}' empfangen", reply);
                 reply.clear();
             }
             Err(err) => {
-                println!("{} konnte Reply nicht empfangen: {}", self.name, err);
+                println!("konnte Reply nicht empfangen: {}", err);
             }
         }
     }
@@ -57,11 +57,11 @@ impl Client {
 
         match self.socket.read_to_string(&mut reply) {
             Ok(_) => {
-                println!("{} hat '{}' empfangen", self.name, reply);
+                println!("'{}' empfangen", reply);
                 reply.clear();
             }
             Err(err) => {
-                println!("{} konnte Reply nicht empfangen: {}", self.name, err);
+                println!("Konnte Reply nicht empfangen: {}", err);
             }
         }
     }

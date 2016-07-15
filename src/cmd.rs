@@ -70,6 +70,12 @@ pub fn read_command() -> String {
         )
         (@subcommand module =>
             (about: "Konfiguration und Information der Sensor Module")
+            (@subcommand set =>
+                (about: "Konfiguration eines Modules")
+                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
+                (@arg config_value: +takes_value +required "zu setzender Wert")
+                (@arg module_num: +takes_value +required "die Nummer des zu konfigurierenden Moduls")
+            )
         )
     ).get_matches();
 
@@ -155,6 +161,37 @@ pub fn read_command() -> String {
                 config_value = matches;
             }
             fullcommand = format!("{} {} {} {}", command, subcommand, config_entry, config_value);
+        }
+
+        if let Some(ref matches) = matches.subcommand_matches("get") {
+            subcommand = "get";
+            if let Some(ref matches) = matches.value_of("config_entry") {
+                config_entry = matches;
+            }
+            fullcommand = format!("{} {} {}", command, subcommand, config_entry);
+        }
+    }
+
+    // Module Command
+    if let Some(ref matches) = matches.subcommand_matches("module") {
+        let command = "module";
+        let mut subcommand = "";
+        let mut config_entry = "";
+        let mut config_value = "";
+        let mut module_num = "";
+
+        if let Some(ref matches) = matches.subcommand_matches("set") {
+            subcommand = "set";
+            if let Some(ref matches) = matches.value_of("config_entry") {
+                config_entry = matches;
+            }
+            if let Some(ref matches) = matches.value_of("config_value") {
+                config_value = matches;
+            }
+            if let Some(ref matches) = matches.value_of("module_num") {
+                config_value = matches;
+            }
+            fullcommand = format!("{} {} {} {} {}", command, subcommand, config_entry, config_value, module_num);
         }
 
         if let Some(ref matches) = matches.subcommand_matches("get") {
