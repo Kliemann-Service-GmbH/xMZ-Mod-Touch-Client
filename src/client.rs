@@ -10,9 +10,9 @@ pub struct Client {
 impl Client {
     pub fn new() -> Self {
         let mut socket = Socket::new(Protocol::Req).unwrap();
+        let mut endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
         // socket.set_receive_timeout(1000);
-        let mut endpoint = socket.connect("ipc:///tmp/xmz-client.ipc").unwrap();
 
         Client {
             socket: socket,
