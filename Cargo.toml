@@ -1,6 +1,6 @@
 [package]
-name = "xmz-client"
-version = "0.2.1"
+name = "xmz_client"
+version = "0.2.2"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Befehlszeilen Client für die 'xMZ-Mod-Touch'-Platform"
 homepage = "https://gaswarnanlagen.com/xmz"
@@ -9,6 +9,9 @@ readme = "README.md"
 keywords = ["xmz", "xMZ-Mod-Touch"]
 license = "GPL-2.0"
 
+[[bin]]
+name = "xmz-client-bin"
+path = "src/xmz-client-bin.rs"
 
 [dependencies]
 nanomsg = "0.6"

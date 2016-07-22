@@ -1,9 +1,35 @@
 use clap::{Arg, App, SubCommand};
 
-/// Liest die Befehlszeilen Parameter und formt ein entsprechenden String
-///
-/// Dieser wird dann an den Server gesendet. Der wiederum parst dann diesen.
+
+/// Neue schlanke Version
 pub fn read_command() -> String {
+    let mut fullcommand: String = String::new();   // Return Value
+
+    // Pull version information out of Cargo.toml
+    let version = format!("{}.{}.{}{}",
+                    env!("CARGO_PKG_VERSION_MAJOR"),
+                    env!("CARGO_PKG_VERSION_MINOR"),
+                    env!("CARGO_PKG_VERSION_PATCH"),
+                    option_env!("CARGO_PKG_VERSION_PRE").unwrap_or(""));
+
+    let matches = clap_app!(xmz_client =>
+        (version: version.as_str())
+        (author: env!("CARGO_PKG_AUTHORS"))
+        (about: env!("CARGO_PKG_DESCRIPTION"))
+        (@arg command: +takes_value +required "Befehl der an den Server gesendet werden soll")
+    ).get_matches();
+
+    fullcommand = format!("{}", matches.value_of("command").unwrap());
+    fullcommand
+}
+
+
+
+/// Alte komplexe Version
+///
+/// Liest die Befehlszeilen Parameter und formt ein entsprechenden String
+/// Dieser wird dann an den Server gesendet. Der wiederum parst dann diesen.
+pub fn read_command_old() -> String {
     let mut fullcommand: String = String::new();   // Return Value
 
     // Pull version information out of Cargo.toml
@@ -74,6 +100,11 @@ pub fn read_command() -> String {
                 (about: "Konfiguration eines Modules")
                 (@arg config_entry: +takes_value +required "Konfigurations Parameter")
                 (@arg config_value: +takes_value +required "zu setzender Wert")
+                (@arg module_num: +takes_value +required "die Nummer des zu konfigurierenden Moduls")
+            )
+            (@subcommand get =>
+                (about: "Abfragen der Konfiguration eines Modules")
+                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
                 (@arg module_num: +takes_value +required "die Nummer des zu konfigurierenden Moduls")
             )
         )

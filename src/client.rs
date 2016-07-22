@@ -12,40 +12,16 @@ impl Client {
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let mut endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
-        // socket.set_receive_timeout(1000);
+        socket.set_receive_timeout(2000);
 
         Client {
             socket: socket,
         }
     }
 
-    pub fn run(&mut self) {
-        let mut reply = String::new();
-
-        let request = format!("led set 1");
-
-        match self.socket.write_all(request.as_bytes()) {
-            Ok(..) => {
-                println!("Send {}", request);
-            }
-            Err(err) => { println!("Failed to send: {}", request); }
-        }
-
-        match self.socket.read_to_string(&mut reply) {
-            Ok(_) => {
-                println!("'{}' empfangen", reply);
-                reply.clear();
-            }
-            Err(err) => {
-                println!("konnte Reply nicht empfangen: {}", err);
-            }
-        }
-    }
-
 
     pub fn request<T: AsRef<str>>(&mut self, message: T) {
         let mut reply = String::new();
-
         let request = format!("{}", message.as_ref());
 
         match self.socket.write_all(request.as_bytes()) {
