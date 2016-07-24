@@ -19,6 +19,24 @@ impl Client {
         }
     }
 
+    /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Option<String>
+    ///
+    pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Option<String> {
+        let mut reply = String::new();
+        let request = format!("{}", message.as_ref());
+
+        match self.socket.write_all(request.as_bytes()) {
+            Ok(..) => { println!("Sende: {}", request); }
+            Err(err) => { println!("Fehler beim Senden des Requests: {}", request); }
+        }
+
+        match self.socket.read_to_string(&mut reply) {
+            Ok(_) => {  }
+            Err(err) => { println!("Konnte Reply nicht empfangen: {}", err); }
+        }
+
+        Some(reply)
+    }
 
     pub fn request<T: AsRef<str>>(&mut self, message: T) {
         let mut reply = String::new();

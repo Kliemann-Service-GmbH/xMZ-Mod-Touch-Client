@@ -14,5 +14,7 @@ name = "xmz-client-bin"
 path = "src/xmz-client-bin.rs"
 
 [dependencies]
-nanomsg = "0.6"
+nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
 clap = { version = "2", features = ["unstable"] }
+rustc-serialize = "0.3"
+xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "v0.5.x", version = "0.5.0" }
