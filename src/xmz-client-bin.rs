@@ -14,5 +14,5 @@ mod cmd;
 fn main() {
     let message = cmd::read_command();
     let mut client = Client::new();
-    client.request(message);
+    client.execute(message);
 }

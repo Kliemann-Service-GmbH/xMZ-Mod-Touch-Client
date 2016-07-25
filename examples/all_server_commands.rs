@@ -34,7 +34,7 @@ fn main() {
     ];
 
     for msg in messages {
-        client.request(msg);
+        client.execute(msg);
         ::std::thread::sleep(::std::time::Duration::new(1, 0));
     }
 }

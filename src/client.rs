@@ -8,6 +8,15 @@ pub struct Client {
 }
 
 impl Client {
+    /// Erzeugt eine neue Client Instanz
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use xmz_client::client::Client;
+    ///
+    /// let client = Client::new();
+    /// ```
     pub fn new() -> Self {
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let mut endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
@@ -19,45 +28,43 @@ impl Client {
         }
     }
 
-    /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Option<String>
+    /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Result<String, Error>
     ///
-    pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Option<String> {
+    /// # Params
+    ///
+    /// `message`   - Zu sendende Nachricht als String oder &str
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use xmz_client::client::Client;
+    ///
+    /// let mut client = Client::new();
+    /// client.execute("server version");
+    /// ```
+    pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Result<String, Error> {
         let mut reply = String::new();
         let request = format!("{}", message.as_ref());
 
-        match self.socket.write_all(request.as_bytes()) {
-            Ok(..) => { println!("Sende: {}", request); }
-            Err(err) => { println!("Fehler beim Senden des Requests: {}", request); }
-        }
+        try!(self.socket.write_all(request.as_bytes()));
+        try!(self.socket.read_to_string(&mut reply));
 
-        match self.socket.read_to_string(&mut reply) {
-            Ok(_) => {  }
-            Err(err) => { println!("Konnte Reply nicht empfangen: {}", err); }
-        }
-
-        Some(reply)
+        Ok(reply)
     }
+}
 
-    pub fn request<T: AsRef<str>>(&mut self, message: T) {
-        let mut reply = String::new();
-        let request = format!("{}", message.as_ref());
+#[cfg(tests)]
+mod test {
 
-        match self.socket.write_all(request.as_bytes()) {
-            Ok(..) => {
-                println!("Sende: {}", request);
-            }
-            Err(err) => { println!("Fehler beim Senden des Requests: {}", request); }
+        #[test]
+        fn execute_parameter_str() {
+            let mut client = Client::new();
+            client.execute("server version");
         }
 
-        match self.socket.read_to_string(&mut reply) {
-            Ok(_) => {
-                println!("'{}' empfangen", reply);
-                reply.clear();
-            }
-            Err(err) => {
-                println!("Konnte Reply nicht empfangen: {}", err);
-            }
+        #[test]
+        fn execute_parameter_string() {
+            let mut client = Client::new();
+            client.execute("server version".to_string());
         }
-    }
-
 }
