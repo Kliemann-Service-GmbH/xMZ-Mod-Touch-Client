@@ -9,7 +9,7 @@ use xmz_server::module::{Module, ModuleType};
 
 fn main() {
     let mut client = Client::new();
-    let module = Module::new(ModuleType::RAGAS_CO_NO2);
+    // let module = Module::new(ModuleType::RAGAS_CO_NO2);
 
     let module: Vec<Module> = json::decode(&client.execute("module list").unwrap()).unwrap();
 
