@@ -1,6 +1,9 @@
 Komandozeilen Client für die 'xMZ-Mod-Touch'-Platform
 
-# Build
+Mit diesem Command Line Interface (Befehlszeilen Schnittstelle :) können Befehle
+an den Server Prozess der 'xMZ-Mod-Touch' gesendet werden.
+
+# Build, Compilation auf der 'xMZ-Mod-Touch'-Hardware
 Die folgenden Befehle gehen davon aus das das Meta Git Repository
 ['xMZ-Mod-Touch-Software'][1] im HOME Verzeichnis ausgecheckt wurde.
 
