@@ -17,4 +17,4 @@ path = "src/xmz-client-bin.rs"
 clap = { version = "2", features = ["unstable"] }
 nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
 rustc-serialize = "0.3"
-xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = ">=0.5.0" }
+xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
