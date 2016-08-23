@@ -1,7 +1,8 @@
-use clap::{Arg, App, SubCommand};
 
 
-/// Neue schlanke Version
+/// Liest die Befehlszeilen Parameter und formt ein entsprechenden String
+/// Dieser wird dann an den Server gesendet. Der wiederum parst dann diesen.
+#[allow(unused_assignments)]
 pub fn read_command() -> String {
     let mut fullcommand: String = String::new();   // Return Value
 
@@ -13,34 +14,6 @@ pub fn read_command() -> String {
                     option_env!("CARGO_PKG_VERSION_PRE").unwrap_or(""));
 
     let matches = clap_app!(xmz_client =>
-        (version: version.as_str())
-        (author: env!("CARGO_PKG_AUTHORS"))
-        (about: env!("CARGO_PKG_DESCRIPTION"))
-        (@arg command: +takes_value +required "Befehl der an den Server gesendet werden soll")
-    ).get_matches();
-
-    fullcommand = format!("{}", matches.value_of("command").unwrap());
-    fullcommand
-}
-
-
-
-/// Alte komplexe Version
-///
-/// Liest die Befehlszeilen Parameter und formt ein entsprechenden String
-/// Dieser wird dann an den Server gesendet. Der wiederum parst dann diesen.
-pub fn read_command_old() -> String {
-    let mut fullcommand: String = String::new();   // Return Value
-
-    // Pull version information out of Cargo.toml
-    let version = format!("{}.{}.{}{}",
-                    env!("CARGO_PKG_VERSION_MAJOR"),
-                    env!("CARGO_PKG_VERSION_MINOR"),
-                    env!("CARGO_PKG_VERSION_PATCH"),
-                    option_env!("CARGO_PKG_VERSION_PRE").unwrap_or(""));
-
-    let matches = clap_app!(xmz_client =>
-        (@setting SubcommandRequiredElseHelp)
         (version: version.as_str())
         (author: env!("CARGO_PKG_AUTHORS"))
         (about: env!("CARGO_PKG_DESCRIPTION"))
@@ -86,27 +59,31 @@ pub fn read_command_old() -> String {
             (about: "Konfiguration des Servers Lesen und Ändern")
             (@subcommand set =>
                 (about: "Konfiguration des Servers (1. Parameter) durch den Wert (2. Parameter) ersetzen")
-                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
+                (@arg config_entry: +takes_value +required possible_value[modbus_device interface_config] "Konfigurations Parameter")
                 (@arg config_value: +takes_value +required "zu setzender Wert")
             )
             (@subcommand get =>
                 (about: "Konfigurations Parameter abfragen")
-                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
+                (@arg config_entry: +takes_value +required possible_value[modbus_device interface_config] "Konfigurations Parameter")
             )
         )
         (@subcommand module =>
             (about: "Konfiguration und Information der Sensor Module")
             (@subcommand set =>
                 (about: "Konfiguration eines Modules")
-                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
+                (@arg config_entry: +takes_value +required possible_value[modbus_slave_id] "Konfigurations Parameter")
                 (@arg config_value: +takes_value +required "zu setzender Wert")
-                (@arg module_num: +takes_value +required "die Nummer des zu konfigurierenden Moduls")
+                (@arg module_num: +takes_value +required "Nummer des zu konfigurierenden Modules")
             )
             (@subcommand get =>
                 (about: "Abfragen der Konfiguration eines Modules")
-                (@arg config_entry: +takes_value +required "Konfigurations Parameter")
-                (@arg module_num: +takes_value +required "die Nummer des zu konfigurierenden Moduls")
+                (@arg config_entry: +takes_value +required possible_value[modbus_slave_id] "Konfigurations Parameter")
+                (@arg module_num: +takes_value +required "Nummer des zu konfigurierenden Modules")
             )
+            (@subcommand list =>
+                (about: "Json encodierte liste aller Module")
+            )
+
         )
     ).get_matches();
 
@@ -231,6 +208,11 @@ pub fn read_command_old() -> String {
                 config_entry = matches;
             }
             fullcommand = format!("{} {} {}", command, subcommand, config_entry);
+        }
+
+        if let Some(ref _matches) = matches.subcommand_matches("list") {
+            subcommand = "list";
+            fullcommand = format!("{} {}", command, subcommand);
         }
     }
 
