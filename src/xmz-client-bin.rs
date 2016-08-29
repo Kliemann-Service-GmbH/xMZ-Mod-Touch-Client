@@ -14,7 +14,9 @@ mod cmd;
 
 
 fn main() {
+    env_logger::init().unwrap();
+
     let message = cmd::read_command();
     let mut client = Client::new();
-    println!("{:?}", client.execute(message));
+    info!("{:?}", client.execute(message));
 }

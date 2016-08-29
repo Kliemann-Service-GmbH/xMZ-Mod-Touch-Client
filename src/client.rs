@@ -8,6 +8,10 @@ pub struct Client {
 impl Client {
     /// Erzeugt eine neue Client Instanz
     ///
+    /// Jeder Client wird mit einem Empfangs-Timeout (receive) von 2 Sek. (2000ms) initalisiert.
+    /// Wird auch ein Sende-Timeout benötigt muss die Funktion `new_with_send_timeout` anstelle
+    /// von `new()` verwendet werden.
+    ///
     /// # Examples
     ///
     /// ```
@@ -20,11 +24,34 @@ impl Client {
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let _endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
+        info!("Aktiviere Socket Receive Timeout von 2 Sekunden");
         socket.set_receive_timeout(2000).unwrap();
 
         Client {
             socket: socket,
         }
+    }
+
+    /// Erzeugt eine neue Client Instanz **mit einem Send Timeout**
+    ///
+    /// Alternative Client Initialisierung mit einem Sende Timeout (1. Parameter in Millisekunden)
+    ///
+    /// # Parameters
+    ///
+    /// `send_timeout`  - Send Timeout in Millisekunden
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use xmz_client::client::Client;
+    ///
+    /// let client = Client::new_with_send_timeout(2000);
+    /// ```
+    pub fn new_with_send_timeout(send_timeout: isize) -> Self {
+        let mut client = Client::new();
+        client.socket.set_send_timeout(send_timeout);
+
+        client
     }
 
     /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Result<String, Error>
@@ -42,6 +69,8 @@ impl Client {
     /// client.execute("server version");
     /// ```
     pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Result<String, Error> {
+        trace!("Führe Befehl aus");
+        info!("Befehl: {}", message.as_ref());
         let mut reply = String::new();
         let request = format!("{}", message.as_ref());
 

@@ -1,3 +1,5 @@
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate xmz_client;
 
 use xmz_client::client::Client;
@@ -5,8 +7,12 @@ use xmz_client::client::Client;
 
 
 fn main() {
-    let mut client = Client::new();
+    trace!("Initialisiere den Logger");
+    env_logger::init().unwrap();
 
+    trace!("Initialisiere den Client");
+    let mut client = Client::new_with_send_timeout(1000);
+    // Alle möglichen Befehle
     let messages: Vec<_> = vec![
         "led list",
         "led test",
