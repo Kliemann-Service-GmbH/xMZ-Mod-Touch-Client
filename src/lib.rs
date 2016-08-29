@@ -10,13 +10,16 @@
 //! Git Repository: https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client
 
 #[macro_use] extern crate clap;
+#[macro_use] extern crate log;
 extern crate nanomsg;
 
+
+/// Implementation des Clients
 pub mod client;
-
+/// Befehlsverwaltung des Clienten
 pub mod cmd;
-
 pub mod error;
+
 
 #[cfg(test)]
 mod tests {

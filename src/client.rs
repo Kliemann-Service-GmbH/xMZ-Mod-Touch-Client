@@ -16,6 +16,7 @@ impl Client {
     /// let client = Client::new();
     /// ```
     pub fn new() -> Self {
+        trace!("Erzeuge neuen Client");
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let _endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
