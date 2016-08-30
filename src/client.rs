@@ -9,9 +9,9 @@ pub struct Client {
 impl Client {
     /// Erzeugt eine neue Client Instanz
     ///
-    /// Jeder Client wird mit einem Empfangs-Timeout (receive) von 2 Sek. (2000ms) initalisiert.
-    /// Wird auch ein Sende-Timeout benötigt muss die Funktion `new_with_send_timeout` anstelle
-    /// von `new()` verwendet werden.
+    /// Jeder Client wird ohne spezielle Timeout Einstellungen initalisiert. Werden spezielle
+    /// Timeouts benötigt müssen die Funktionen `set_socket_send_timeout()` und
+    /// `set_socket_receive_timeout()` verwendet werden.
     ///
     /// # Examples
     ///
@@ -26,7 +26,7 @@ impl Client {
         let _endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
         info!("Aktiviere Socket Receive Timeout von 2 Sekunden");
-        socket.set_receive_timeout(2000).unwrap();
+        // socket.set_receive_timeout(2000).unwrap();
 
         Client {
             socket: socket,
@@ -55,6 +55,48 @@ impl Client {
         client
     }
 
+    /// Setzt den Send Timeout Wert des Sockets
+    ///
+    /// # Params
+    ///
+    /// `timeout`   - der zu setzende Timeout
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use xmz_client::client::Client;
+    ///
+    /// let mut client = Client::new();
+    /// assert_eq!(client.set_socket_send_timeout(1000).unwrap(), ());
+    /// ```
+    ///
+    pub fn set_socket_send_timeout(&mut self, timeout: isize) -> Result<()> {
+        let _ = try!(self.socket.set_send_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
+
+        Ok(())
+    }
+
+    /// Setzt den Empfangs (receive) Timeout Wert des Sockets
+    ///
+    /// # Params
+    ///
+    /// `timeout`   - der zu setzende Timeout
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use xmz_client::client::Client;
+    ///
+    /// let mut client = Client::new();
+    /// assert_eq!(client.set_socket_receive_timeout(1000).unwrap(), ());
+    /// ```
+    ///
+    pub fn set_socket_receive_timeout(&mut self, timeout: isize) -> Result<()> {
+        try!(self.socket.set_receive_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
+
+        Ok(())
+    }
+
     /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Result<()>
     ///
     /// # Params
@@ -67,7 +109,7 @@ impl Client {
     /// use xmz_client::client::Client;
     ///
     /// let mut client = Client::new();
-    /// assert_eq!(client.execute("server version"), Some(""));
+    /// //assert_eq!(client.execute("server version"), Some(""));
     /// ```
     pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Result<String> {
         trace!("Führe Befehl aus");
