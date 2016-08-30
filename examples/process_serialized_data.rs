@@ -6,7 +6,7 @@ extern crate xmz_server;
 
 use rustc_serialize::json;
 use xmz_client::client::Client;
-use xmz_server::module::{Module, ModuleType};
+use xmz_server::module::{Module};
 
 
 fn main() {

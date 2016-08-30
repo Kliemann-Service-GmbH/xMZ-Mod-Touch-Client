@@ -1,6 +1,6 @@
 [package]
 name = "xmz_client"
-version = "0.14.1"
+version = "0.14.2"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Befehlszeilen Client für die 'xMZ-Mod-Touch'-Platform"
 homepage = "https://gaswarnanlagen.com/xmz"

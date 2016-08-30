@@ -25,34 +25,11 @@ impl Client {
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let _endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
         // socket.set_send_timeout(1000);
-        info!("Aktiviere Socket Receive Timeout von 2 Sekunden");
         // socket.set_receive_timeout(2000).unwrap();
 
         Client {
             socket: socket,
         }
-    }
-
-    /// Erzeugt eine neue Client Instanz **mit einem Send Timeout**
-    ///
-    /// Alternative Client Initialisierung mit einem Sende Timeout (1. Parameter in Millisekunden)
-    ///
-    /// # Parameters
-    ///
-    /// `send_timeout`  - Send Timeout in Millisekunden
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use xmz_client::client::Client;
-    ///
-    /// let client = Client::new_with_send_timeout(2000);
-    /// ```
-    pub fn new_with_send_timeout(send_timeout: isize) -> Self {
-        let mut client = Client::new();
-        client.socket.set_send_timeout(send_timeout);
-
-        client
     }
 
     /// Setzt den Send Timeout Wert des Sockets
