@@ -1,4 +1,5 @@
-use nanomsg::{Socket, Protocol, Error};
+use errors::*;
+use nanomsg::{Socket, Protocol};
 use std::io::{Read, Write};
 
 pub struct Client {
@@ -54,7 +55,7 @@ impl Client {
         client
     }
 
-    /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Result<String, Error>
+    /// Führt ein Befehl aus (1. Parameter) und liefert das Ergebnis als Result<()>
     ///
     /// # Params
     ///
@@ -66,16 +67,16 @@ impl Client {
     /// use xmz_client::client::Client;
     ///
     /// let mut client = Client::new();
-    /// client.execute("server version");
+    /// assert_eq!(client.execute("server version"), Some(""));
     /// ```
-    pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Result<String, Error> {
+    pub fn execute<T: AsRef<str>>(&mut self, message: T) -> Result<String> {
         trace!("Führe Befehl aus");
         info!("Befehl: {}", message.as_ref());
         let mut reply = String::new();
         let request = format!("{}", message.as_ref());
 
-        try!(self.socket.write_all(request.as_bytes()));
-        try!(self.socket.read_to_string(&mut reply));
+        try!(self.socket.write_all(request.as_bytes()).chain_err(|| "Konnte Nachricht nicht schreiben"));
+        try!(self.socket.read_to_string(&mut reply).chain_err(|| "Nachricht konnte nicht gelesen werden"));
 
         Ok(reply)
     }
