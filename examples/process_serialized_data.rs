@@ -13,10 +13,19 @@ fn main() {
     trace!("Initialisiere den Logger");
     env_logger::init().unwrap();
 
+    let mut module: Vec<Module> = vec![];
     let mut client = Client::new();
-    // let module = Module::new(ModuleType::RAGAS_CO_NO2);
+    info!("Setze Empfangs Timeout auf 1sek");
+    let _ = client.set_socket_receive_timeout(1000);
 
-    let module: Vec<Module> = json::decode(&client.execute("module list").unwrap()).unwrap();
+    match client.execute("module list") {
+        Ok(client) => { module = json::decode(&client).unwrap_or(vec![]); }
+        Err(err) => {
+            // println!("{:#?}", err);
+            println!("description {:#?}", ::std::error::Error::description(&err));
+            println!("cause {:#?}", ::std::error::Error::cause(&err).unwrap());
+        }
+    }
 
-    info!("{:#?}", module);
+    println!("{:#?}", module);
 }

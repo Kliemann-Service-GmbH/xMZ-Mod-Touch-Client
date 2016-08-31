@@ -3,7 +3,10 @@ use nanomsg::{Socket, Protocol};
 use std::io::{Read, Write};
 
 pub struct Client {
+    /// Nanomsg Socket
     socket: Socket,
+    /// Counter der Kommunikationsfehler
+    pub error_communication: u32,
 }
 
 impl Client {
@@ -29,6 +32,7 @@ impl Client {
 
         Client {
             socket: socket,
+            error_communication: 0,
         }
     }
 
@@ -124,5 +128,19 @@ mod test {
     fn execute_parameter_string() {
         let mut client = Client::new();
         client.execute("server version".to_string());
+    }
+
+    #[test]
+    fn set_socket_send_timeout() {
+        let mut client = Client::new();
+
+        assert_eq!(client.set_socket_send_timeout(1000).unwrap(), ());
+    }
+
+    #[test]
+    fn set_socket_receive_timeout() {
+        let mut client = Client::new();
+
+        assert_eq!(client.set_socket_receive_timeout(1000).unwrap(), ());
     }
 }
