@@ -12,7 +12,7 @@ pub struct Client {
 impl Client {
     /// Erzeugt eine neue Client Instanz
     ///
-    /// Jeder Client wird ohne spezielle Timeout Einstellungen initalisiert. Werden spezielle
+    /// ... Werden spezielle
     /// Timeouts benötigt müssen die Funktionen `set_socket_send_timeout()` und
     /// `set_socket_receive_timeout()` verwendet werden.
     ///
@@ -27,8 +27,8 @@ impl Client {
         trace!("Erzeuge neuen Client");
         let mut socket = Socket::new(Protocol::Req).unwrap();
         let _endpoint = socket.connect("ipc:///tmp/xmz-server.ipc").unwrap();
-        // socket.set_send_timeout(1000);
-        // socket.set_receive_timeout(2000).unwrap();
+        socket.set_send_timeout(100);
+        socket.set_receive_timeout(100).unwrap();
 
         Client {
             socket: socket,
