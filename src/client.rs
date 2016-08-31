@@ -1,10 +1,13 @@
 use errors::*;
 use nanomsg::{Socket, Protocol};
 use std::io::{Read, Write};
+use std::sync::{Arc, Mutex};
 
+
+#[derive(Clone)]
 pub struct Client {
     /// Nanomsg Socket
-    socket: Socket,
+    socket: Arc<Mutex<Socket>>,
     /// Counter der Kommunikationsfehler
     pub error_communication: u32,
 }
@@ -31,7 +34,7 @@ impl Client {
         socket.set_receive_timeout(100).unwrap();
 
         Client {
-            socket: socket,
+            socket: Arc::new(Mutex::new(socket)),
             error_communication: 0,
         }
     }
@@ -52,7 +55,7 @@ impl Client {
     /// ```
     ///
     pub fn set_socket_send_timeout(&mut self, timeout: isize) -> Result<()> {
-        let _ = try!(self.socket.set_send_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
+        let _ = try!(self.socket.lock().unwrap().set_send_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
 
         Ok(())
     }
@@ -73,7 +76,7 @@ impl Client {
     /// ```
     ///
     pub fn set_socket_receive_timeout(&mut self, timeout: isize) -> Result<()> {
-        try!(self.socket.set_receive_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
+        try!(self.socket.lock().unwrap().set_receive_timeout(timeout).chain_err(|| "Socket Send Timeout konnte nicht gesetzt werden"));
 
         Ok(())
     }
@@ -98,8 +101,8 @@ impl Client {
         let mut reply = String::new();
         let request = format!("{}", message.as_ref());
 
-        try!(self.socket.write_all(request.as_bytes()).chain_err(|| "Konnte Nachricht nicht schreiben"));
-        try!(self.socket.read_to_string(&mut reply).chain_err(|| "Nachricht konnte nicht gelesen werden"));
+        try!(self.socket.lock().unwrap().write_all(request.as_bytes()).chain_err(|| "Konnte Nachricht nicht schreiben"));
+        try!(self.socket.lock().unwrap().read_to_string(&mut reply).chain_err(|| "Nachricht konnte nicht gelesen werden"));
 
         Ok(reply)
     }
