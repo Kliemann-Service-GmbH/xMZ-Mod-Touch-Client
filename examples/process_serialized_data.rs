@@ -22,10 +22,10 @@ fn main() {
         Ok(client) => { module = json::decode(&client).unwrap_or(vec![]); }
         Err(err) => {
             // println!("{:#?}", err);
-            println!("description {:#?}", ::std::error::Error::description(&err));
-            println!("cause {:#?}", ::std::error::Error::cause(&err).unwrap());
+            println!("description: {:#?}", ::std::error::Error::description(&err));
+            println!("cause: {:#?}", ::std::error::Error::cause(&err).unwrap());
         }
     }
 
-    println!("{:#?}", module);
+    println!("Module: {:#?}", module);
 }
