@@ -1,3 +1,5 @@
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate xmz_client;
 
 use xmz_client::client::Client;
@@ -5,8 +7,17 @@ use xmz_client::client::Client;
 
 
 fn main() {
-    let mut client = Client::new();
+    trace!("Initialisiere den Logger");
+    env_logger::init().unwrap();
 
+    trace!("Initialisiere den Client");
+    let mut client = Client::new();
+    info!("Send Timeout 1000");
+    client.set_socket_send_timeout(1000);
+    info!("Empfangs Timeout 1000");
+    client.set_socket_receive_timeout(1000);
+
+    // Alle möglichen Befehle
     let messages: Vec<_> = vec![
         "led list",
         "led test",
@@ -34,7 +45,12 @@ fn main() {
     ];
 
     for msg in messages {
-        client.execute(msg);
-        ::std::thread::sleep(::std::time::Duration::new(1, 0));
+        match client.execute(msg) {
+            Ok(msg) => {
+                println!("{:?}", msg); 
+                ::std::thread::sleep(::std::time::Duration::new(1, 0));
+            }
+            Err(err) => { println!("Fehler: {}", err); }
+        }
     }
 }

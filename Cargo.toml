@@ -1,6 +1,6 @@
 [package]
 name = "xmz_client"
-version = "0.13.0"
+version = "0.14.3"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Befehlszeilen Client für die 'xMZ-Mod-Touch'-Platform"
 homepage = "https://gaswarnanlagen.com/xmz"
@@ -15,6 +15,13 @@ path = "src/xmz-client-bin.rs"
 
 [dependencies]
 clap = { version = "2", features = ["unstable"] }
+env_logger = "0.3"
+error-chain = "*"
+log = "0.3"
 nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
 rustc-serialize = "0.3"
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
+
+# Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
+[dev-dependencies]
+env_logger = "0.3"
